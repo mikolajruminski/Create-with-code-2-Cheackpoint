@@ -45,6 +45,7 @@ public class ThrowBalls : MonoBehaviour
             throwVec = firstPos - secondPos;
             if (isActive == true) {
             rb.AddForce(throwVec * 3f, ForceMode.Impulse);
+            gameObject.GetComponent<TrailRenderer>().emitting = true;
             }
             isGrounded = false;
         }
@@ -53,13 +54,14 @@ public class ThrowBalls : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Sensor")) {
             isActive = false;
-            gameObject.GetComponent<TrailRenderer>().enabled = false;
+            gameObject.GetComponent<TrailRenderer>().emitting = false;
         }
     }
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground")){
             isGrounded = true;
+            gameObject.GetComponent<TrailRenderer>().emitting = false;
         }
     }
 

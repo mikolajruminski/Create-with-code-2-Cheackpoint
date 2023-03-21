@@ -10,6 +10,8 @@ public class Counter : MonoBehaviour
     public GameObject gam;
     private AudioSource gameManager;
 
+    public ParticleSystem fireworks;
+
     private int Count = 0;
     public bool isDunked = false;
 
@@ -34,6 +36,7 @@ public class Counter : MonoBehaviour
          CounterText.text = "Count : " + Count;
          isDunked = true;
          gameManager.Play();
+         Instantiate(fireworks, transform.position, transform.rotation);
          
     }
 }

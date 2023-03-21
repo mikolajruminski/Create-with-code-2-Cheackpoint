@@ -6,7 +6,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject pauseScreen;
+    public Image pauseScreen;
     private bool isPaused;
     public GameObject ball;
     public GameObject count;
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
             pauseScreen.gameObject.SetActive(true);
         }
 
-        if (Input.GetKeyDown(KeyCode.P) && isPaused == true) {
+        else if (Input.GetKeyDown(KeyCode.P) && isPaused == true) {
             isPaused = false;
             Time.timeScale = 1;
             pauseScreen.gameObject.SetActive(false);
