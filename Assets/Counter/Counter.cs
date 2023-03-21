@@ -33,10 +33,16 @@ public class Counter : MonoBehaviour
     private void ScorePoint() 
     {
          Count += 1;
-         CounterText.text = "Count : " + Count;
+         CounterText.text = "Score : " + Count;
          isDunked = true;
          gameManager.Play();
-         Instantiate(fireworks, transform.position, transform.rotation);
+         StartCoroutine(fireworksPlay());
          
+    }
+
+    IEnumerator fireworksPlay () {
+     Instantiate(fireworks, transform.position, transform.rotation);
+     yield return new WaitForSeconds(1);
+     Destroy(GameObject.FindGameObjectWithTag("Fireworks"));
     }
 }

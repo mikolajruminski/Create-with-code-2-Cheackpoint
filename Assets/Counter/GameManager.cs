@@ -3,17 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public Image pauseScreen;
+
+    public GameObject gameMenu;
+
+    public GameObject gameScreen;
+
+    public TextMeshProUGUI timeCounter;
+
+    public GameObject restartScreen;
     private bool isPaused;
     public GameObject ball;
     public GameObject count;
     private Counter counterScript;
     private Vector3 spawnPoint = new Vector3(-8.08f, 0.25f, -5.48f);
-
+    
+    public bool isGameActive = false;
     bool isSpawning = false;
+
+    private float timeLimit = 3;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,14 +37,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (counterScript.isDunked == true && isSpawning == false) {
+        if (counterScript.isDunked == true && isSpawning == false && isGameActive) {
           StartCoroutine(spawnBalls());
         }
         pauseGame();
+
+        if (isGameActive == true) {
+            timeLimiter();
+        }
     }
 
     IEnumerator spawnBalls () {
-        isSpawning = true;
+       isSpawning = true;
        Instantiate(ball, spawnPoint, ball.gameObject.transform.rotation);
        yield return new WaitForSeconds(1);
        counterScript.isDunked = false;
@@ -40,16 +56,38 @@ public class GameManager : MonoBehaviour
     }
 
     void pauseGame () {
-        if (Input.GetKeyDown(KeyCode.P) && isPaused == false) {
+        if (Input.GetKeyDown(KeyCode.P) && isPaused == false && isGameActive) {
             Time.timeScale = 0;
             isPaused = true;
             pauseScreen.gameObject.SetActive(true);
         }
 
-        else if (Input.GetKeyDown(KeyCode.P) && isPaused == true) {
+        else if (Input.GetKeyDown(KeyCode.P) && isPaused == true && isGameActive) {
             isPaused = false;
             Time.timeScale = 1;
             pauseScreen.gameObject.SetActive(false);
         }
+    }
+
+    public void StartGame () {
+
+     gameMenu.gameObject.SetActive(false);
+     isGameActive = true;
+     gameScreen.gameObject.SetActive(true);
+     Instantiate(ball, spawnPoint, ball.gameObject.transform.rotation);
+    }
+
+    private void timeLimiter () {
+      timeLimit -= Time.deltaTime;
+      timeCounter.text = "Time Left : " + timeLimit.ToString("0") + " sec";
+
+      if (timeLimit < 0) {
+        isGameActive = false;
+        restartScreen.gameObject.SetActive(true);
+      }
+    }
+
+    public void RestartGame() {
+      SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
