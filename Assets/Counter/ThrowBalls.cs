@@ -11,11 +11,11 @@ public class ThrowBalls : MonoBehaviour
     private Vector3 firstPos;
     private Vector3 secondPos;
     private Vector3 throwVec;
-    private Rigidbody GameObjectClicked;
     private Rigidbody rb;
    private RaycastHit hit;
    public GameObject trail;
-
+   
+   public bool isGrounded;
    public bool isActive;
 
     Camera cam;
@@ -30,7 +30,7 @@ public class ThrowBalls : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0)){
+        if (Input.GetMouseButtonDown(0) && isGrounded){
             firstPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
             
             // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//
@@ -40,14 +40,13 @@ public class ThrowBalls : MonoBehaviour
          // } 
         }
 
-        if (Input.GetMouseButtonUp(0)) {
+        if (Input.GetMouseButtonUp(0) && isGrounded) {
             secondPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
-            
             throwVec = firstPos - secondPos;
             if (isActive == true) {
             rb.AddForce(throwVec * 3f, ForceMode.Impulse);
-
             }
+            isGrounded = false;
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -55,6 +54,12 @@ public class ThrowBalls : MonoBehaviour
         if (other.gameObject.CompareTag("Sensor")) {
             isActive = false;
             gameObject.GetComponent<TrailRenderer>().enabled = false;
+        }
+    }
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground")){
+            isGrounded = true;
         }
     }
 

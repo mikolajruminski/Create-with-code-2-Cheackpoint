@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     {
         counterScript = count.GetComponent<Counter>();
         isPaused = false;
+        
     }
 
     // Update is called once per frame

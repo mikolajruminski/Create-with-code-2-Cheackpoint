@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class Counter : MonoBehaviour
 {
     public Text CounterText;
+    public GameObject gam;
+    private AudioSource gameManager;
 
     private int Count = 0;
     public bool isDunked = false;
@@ -18,6 +20,7 @@ public class Counter : MonoBehaviour
     {
         Count = 0;
         ballsScript = ball.GetComponent<ThrowBalls>();
+        gameManager = gam.GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,6 +33,7 @@ public class Counter : MonoBehaviour
          Count += 1;
          CounterText.text = "Count : " + Count;
          isDunked = true;
-
+         gameManager.Play();
+         
     }
 }
