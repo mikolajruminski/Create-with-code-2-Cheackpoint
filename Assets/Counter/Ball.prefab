@@ -129,7 +129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trail: {fileID: 7420869096470350042}
-  gameM: {fileID: 0}
   isGrounded: 0
   isActive: 0
 --- !u!96 &7420869096470350042

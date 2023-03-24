@@ -14,7 +14,6 @@ public class ThrowBalls : MonoBehaviour
     private Rigidbody rb;
    private RaycastHit hit;
    public GameObject trail;
-   private GameManager gameManager;
    
    public bool isGrounded;
    public bool isActive;
@@ -26,13 +25,12 @@ public class ThrowBalls : MonoBehaviour
         cam = Camera.main;
         rb = GetComponent<Rigidbody>();
         isActive = true;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
     }
     
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && isGrounded && gameManager.isGameActive){
+        if (Input.GetMouseButtonDown(0) && isGrounded){
             firstPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
             
             // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//
@@ -42,7 +40,7 @@ public class ThrowBalls : MonoBehaviour
          // } 
         }
 
-        if (Input.GetMouseButtonUp(0) && isGrounded && gameManager.isGameActive) {
+        if (Input.GetMouseButtonUp(0) && isGrounded) {
             secondPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
             throwVec = firstPos - secondPos;
             if (isActive == true) {
@@ -51,7 +49,6 @@ public class ThrowBalls : MonoBehaviour
             }
             isGrounded = false;
         }
-        
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -67,7 +64,6 @@ public class ThrowBalls : MonoBehaviour
             gameObject.GetComponent<TrailRenderer>().emitting = false;
         }
     }
-    
 
 
    

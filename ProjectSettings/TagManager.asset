@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Sensor
   - Ground
-  - Fireworks
   layers:
   - Default
   - TransparentFX
