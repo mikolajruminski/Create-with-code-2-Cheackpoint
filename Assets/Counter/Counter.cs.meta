@@ -3,7 +3,11 @@ guid: 23ac8d9e0f1d21044ab42710ee10b3ed
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - CounterText: {instanceID: 0}
+  - gam: {instanceID: 0}
+  - fireworks: {fileID: 7303472089845130122, guid: 10b72606a370a894a88ba7cf2b64219f, type: 3}
+  - ball: {fileID: 7420869096470350035, guid: 5074842721857164c8cccf57a13bc2fe, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

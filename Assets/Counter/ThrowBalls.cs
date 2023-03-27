@@ -7,7 +7,7 @@ public class ThrowBalls : MonoBehaviour
 {
     // Start is called before the first frame update
     private Rigidbody ballRB;
-
+    private GameManager gameManager;
     private Vector3 firstPos;
     private Vector3 secondPos;
     private Vector3 throwVec;
@@ -25,12 +25,12 @@ public class ThrowBalls : MonoBehaviour
         cam = Camera.main;
         rb = GetComponent<Rigidbody>();
         isActive = true;
-
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && isGrounded){
+        if (Input.GetMouseButtonDown(0) && isGrounded && gameManager.isGameActive){
             firstPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
             
             // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//
@@ -40,7 +40,7 @@ public class ThrowBalls : MonoBehaviour
          // } 
         }
 
-        if (Input.GetMouseButtonUp(0) && isGrounded) {
+        if (Input.GetMouseButtonUp(0) && isGrounded && gameManager.isGameActive) {
             secondPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
             throwVec = firstPos - secondPos;
             if (isActive == true) {
