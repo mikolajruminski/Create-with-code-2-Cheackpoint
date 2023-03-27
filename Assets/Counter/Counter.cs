@@ -8,6 +8,8 @@ public class Counter : MonoBehaviour
 {
     public Text CounterText;
     public GameObject gam;
+
+    private Vector3 fireworksPlace = new Vector3(0.59f, 8.25f, 10.82f);
     private AudioSource gameManager;
 
     public ParticleSystem fireworks;
@@ -29,18 +31,32 @@ public class Counter : MonoBehaviour
     {
         ScorePoint();
     }
+   
+   /* void OnCollisionEnter(Collision other)
+    {
+        Debug.Log(other.GetContact(0).normal);
+        if (other.gameObject.CompareTag("Sensor")) //include normals not to allow the ball to dunk from the bottom
+        {
+            Physics.IgnoreCollision(GetComponent<Collider>(), other.collider);
+            ScorePoint();
+        }
+        else {
+            Physics.IgnoreCollision(GetComponent<Collider>(), other.collider);
+        }
+    }
+    */
 
     private void ScorePoint() 
     {
          Count += 1;
-          CounterText.text = "Score : " + Count;
+         CounterText.text = "Score : " + Count;
          isDunked = true;
          gameManager.Play();
          StartCoroutine(fireworksPlay());
     }
 
     IEnumerator fireworksPlay () {
-     Instantiate(fireworks, transform.position, transform.rotation);
+     Instantiate(fireworks, fireworksPlace, transform.rotation);
      yield return new WaitForSeconds(1);
      Destroy(GameObject.FindGameObjectWithTag("Fireworks"));
     }

@@ -10,6 +10,8 @@ public class ThrowBalls : MonoBehaviour
     private GameManager gameManager;
     private Vector3 firstPos;
     private Vector3 secondPos;
+
+    private Vector3 maxThrowVec = new Vector3(12f, 6f, 2f);
     private Vector3 throwVec;
     private Rigidbody rb;
    private RaycastHit hit;
@@ -44,17 +46,22 @@ public class ThrowBalls : MonoBehaviour
             secondPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
             throwVec = firstPos - secondPos;
             if (isActive == true) {
-            rb.AddForce(throwVec * 3f, ForceMode.Impulse);
-            gameObject.GetComponent<TrailRenderer>().emitting = true;
+               rb.AddForce(throwVec * 1f, ForceMode.Impulse);
+               gameObject.GetComponent<TrailRenderer>().emitting = true;
             }
             isGrounded = false;
         }
+        if (Input.GetKey(KeyCode.R) && gameManager.isGameActive && isActive){
+            StartCoroutine(restartPosition());
+        }
+        restartPosition();
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Sensor")) {
             isActive = false;
             gameObject.GetComponent<TrailRenderer>().emitting = false;
+            Destroy(gameObject);
         }
     }
     private void OnCollisionEnter(Collision other)
@@ -64,10 +71,24 @@ public class ThrowBalls : MonoBehaviour
             gameObject.GetComponent<TrailRenderer>().emitting = false;
         }
     }
-
-
-   
-   
     
+    IEnumerator restartPosition () {
+            gameObject.GetComponent<TrailRenderer>().emitting = false;
+            transform.position = gameManager.spawnPoint;
+            yield return null;
+            gameObject.GetComponent<TrailRenderer>().emitting = true;
+
+    }
+   /* void restartPosition () {
+        if (Input.GetKey(KeyCode.R) && gameManager.isGameActive && isActive){
+            gameObject.GetComponent<TrailRenderer>().emitting = false;
+            transform.position = gameManager.spawnPoint;
+            gameObject.GetComponent<TrailRenderer>().emitting = true;
+            
+           
+        }
+        
+    }
+    */
 
 }

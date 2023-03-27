@@ -20,10 +20,10 @@ public class GameManager : MonoBehaviour
     public GameObject ball;
     public GameObject count;
     private Counter counterScript;
-    private Vector3 spawnPoint = new Vector3(-8.08f, 0.25f, -5.48f);
+    public Vector3 spawnPoint = new Vector3(-7.02f, 4.76f, 10.94301f);
     public bool isGameActive = false;
     bool isSpawning = false;
-    private float timeLimit = 3;
+    private float timeLimit = 50;
     // Start is called before the first frame update
     void Start()
     {
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         isGameActive = false;
         restartScreen.gameObject.SetActive(true);
       }
-      
+
     }
 
     public void RestartGame() {
