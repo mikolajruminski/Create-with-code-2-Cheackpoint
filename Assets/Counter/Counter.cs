@@ -22,6 +22,7 @@ public class Counter : MonoBehaviour
 
     private void Start()
     {
+        isDunked = true;
         Count = 0;
         ballsScript = ball.GetComponent<ThrowBalls>();
         gameManager = gam.GetComponent<AudioSource>();

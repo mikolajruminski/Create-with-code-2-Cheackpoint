@@ -7,6 +7,7 @@ public class ThrowBalls : MonoBehaviour
 {
     // Start is called before the first frame update
     private Rigidbody ballRB;
+    private GameObject ground;
     private GameManager gameManager;
     private Vector3 firstPos;
     private Vector3 secondPos;
@@ -23,7 +24,6 @@ public class ThrowBalls : MonoBehaviour
     Camera cam;
 
     private void Start() {
-
         cam = Camera.main;
         rb = GetComponent<Rigidbody>();
         isActive = true;
@@ -67,28 +67,26 @@ public class ThrowBalls : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground")){
+            Debug.Log("Touching ground!");
             isGrounded = true;
             gameObject.GetComponent<TrailRenderer>().emitting = false;
         }
     }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground")){
+            Debug.Log("Not Touching ground!");
+        }
+    }
+    
     
     IEnumerator restartPosition () {
             gameObject.GetComponent<TrailRenderer>().emitting = false;
-            transform.position = gameManager.spawnPoint;
+            transform.position = gameManager.spawnPointLocation;
             yield return null;
             gameObject.GetComponent<TrailRenderer>().emitting = true;
 
     }
-   /* void restartPosition () {
-        if (Input.GetKey(KeyCode.R) && gameManager.isGameActive && isActive){
-            gameObject.GetComponent<TrailRenderer>().emitting = false;
-            transform.position = gameManager.spawnPoint;
-            gameObject.GetComponent<TrailRenderer>().emitting = true;
-            
-           
-        }
-        
-    }
-    */
 
 }
