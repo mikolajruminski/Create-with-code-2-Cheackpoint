@@ -8,9 +8,9 @@ public class Counter : MonoBehaviour
 {
     public Text CounterText;
     public GameObject gam;
-
+    
+    private GameManager gameManager;
     private Vector3 fireworksPlace = new Vector3(0.59f, 8.25f, 10.82f);
-    private AudioSource gameManager;
 
     public ParticleSystem fireworks;
 
@@ -25,7 +25,7 @@ public class Counter : MonoBehaviour
         isDunked = true;
         Count = 0;
         ballsScript = ball.GetComponent<ThrowBalls>();
-        gameManager = gam.GetComponent<AudioSource>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -52,8 +52,8 @@ public class Counter : MonoBehaviour
          Count += 1;
          CounterText.text = "Score : " + Count;
          isDunked = true;
-         gameManager.Play();
          StartCoroutine(fireworksPlay());
+         gameManager.PointSound();
     }
 
     IEnumerator fireworksPlay () {

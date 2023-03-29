@@ -34,6 +34,7 @@ public class ThrowBalls : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && isGrounded && gameManager.isGameActive){
             firstPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
+            gameManager.BallTightening();
             
             // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//
              // if (Physics.Raycast (ray, out hit, 100.0f)) {
@@ -46,6 +47,7 @@ public class ThrowBalls : MonoBehaviour
             secondPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
             throwVec = firstPos - secondPos;
             if (isActive == true) {
+               gameManager.BallRelease();
                rb.AddForce(throwVec * 1f, ForceMode.Impulse);
                gameObject.GetComponent<TrailRenderer>().emitting = true;
             }
