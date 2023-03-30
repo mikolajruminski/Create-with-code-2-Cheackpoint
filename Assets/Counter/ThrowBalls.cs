@@ -57,6 +57,7 @@ public class ThrowBalls : MonoBehaviour
             StartCoroutine(restartPosition());
         }
         restartPosition();
+        ifGroundedCorrection();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -88,6 +89,16 @@ public class ThrowBalls : MonoBehaviour
             transform.position = gameManager.spawnPointLocation;
             yield return null;
             gameObject.GetComponent<TrailRenderer>().emitting = true;
+
+    }
+
+    void ifGroundedCorrection () {
+        var colliders = Physics.OverlapSphere(transform.position, 0.2f);
+           foreach(var collider in colliders) {
+       if (collider.gameObject.name == "boisko") {
+         isGrounded = true;
+       }
+ }
 
     }
 

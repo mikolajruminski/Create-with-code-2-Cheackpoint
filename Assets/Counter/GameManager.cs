@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     public Vector3 spawnPointLocation;
     public bool isGameActive = false;
     bool isSpawning = false;
-    private float timeLimit = 5;
+    private float timeLimit = 60;
 
     //Lerp values
 
