@@ -42,12 +42,11 @@ public class GameManager : MonoBehaviour
     public Vector3 spawnPointLocation;
     public bool isGameActive = false;
     bool isSpawning = false;
-    private float timeLimit = 5;
+    private float timeLimit = 60;
 
     //Lerp values
 
     float timeElapsed;
-    float lerpDuration = 1.5f;
     float startValue = 0;
     float endValue = 1;
 
@@ -83,7 +82,7 @@ public class GameManager : MonoBehaviour
             timeLimiter(); 
         }
     }
-
+    //spawning new balls
     IEnumerator spawnBalls()
     {
         isSpawning = true;
@@ -92,7 +91,8 @@ public class GameManager : MonoBehaviour
         counterScript.isDunked = false;
         isSpawning = false;
     }
-
+    
+    //game functions, start/pause/restart
     void pauseGame()
     {
         if (Input.GetKeyDown(KeyCode.P) && isPaused == false && isGameActive)
@@ -115,10 +115,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         gameMenu.gameObject.SetActive(false);
-        StartCoroutine(cameraToGamePosition(Quaternion.Euler(cameraGameRotation), 10f));
-        isGameActive = true;
-        gameScreen.gameObject.SetActive(true);
-
+        StartCoroutine(cameraToGamePosition(Quaternion.Euler(cameraGameRotation), 1f));
     }
 
     private void timeLimiter()
@@ -130,7 +127,8 @@ public class GameManager : MonoBehaviour
         {
             isGameActive = false;
             restartScreen.gameObject.SetActive(true);
-            StartCoroutine(loadMenus(restartScreenAlpha, 5f));
+            StartCoroutine(loadMenus(restartScreenAlpha, 3f));
+            StartCoroutine(deLoadMenus(gameScreenAlpha, 1f, 0.3f));
         }
 
     }
@@ -145,6 +143,7 @@ public class GameManager : MonoBehaviour
     {
         mainMenuAlpha = GameObject.Find("MenuScreen").GetComponent<CanvasGroup>();
         restartScreenAlpha = GameObject.Find("RestartScreen").GetComponent<CanvasGroup>();
+        gameScreenAlpha = GameObject.Find("GameScreen").GetComponent<CanvasGroup>();
     }
 
     //sounds sources 
@@ -155,24 +154,12 @@ public class GameManager : MonoBehaviour
         src.Play();
     }
 
-    public void PointSound()
+    public void PlaySound(int x, float volume)
     {
-        src.clip = clips[1];
+        src.clip = clips[x];
         src.Play();
     }
 
-    public void BallRelease()
-    {
-        src.clip = clips[2];
-        src.volume = 0.5f;
-        src.Play();
-    }
-
-    public void BallTightening()
-    {
-        src.clip = clips[3];
-        src.Play();
-    }
 
     //animation Lerping
     IEnumerator cameraToGamePosition(Quaternion endValue, float duration)
@@ -183,12 +170,15 @@ public class GameManager : MonoBehaviour
         {
             mainCamera.transform.rotation = Quaternion.Lerp(startValue, endValue, y / 0.75f);
             mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraGamePosition, y / 27);
-
             y += Time.deltaTime;
             yield return null;
         }
         mainCamera.transform.position = cameraGamePosition;
         mainCamera.transform.rotation = endValue;
+        StartCoroutine(loadMenus(gameScreenAlpha, 0.5f));
+        yield return new WaitForSeconds(1);
+        gameScreen.gameObject.SetActive(true);
+        isGameActive = true;
     }
 
     IEnumerator loadMenus(CanvasGroup toLoad, float duration)
@@ -202,4 +192,17 @@ public class GameManager : MonoBehaviour
         }
         toLoad.alpha = endValue;
     }
+
+    IEnumerator deLoadMenus(CanvasGroup toLoad, float duration, float differentStartValue)
+    {
+        float x = 0f;
+        while (x < duration)
+        {
+            toLoad.alpha = Mathf.Lerp(endValue, differentStartValue, x / duration);
+            x += Time.deltaTime;
+            yield return null;
+        }
+        toLoad.alpha = differentStartValue;
+    }
+
 }

@@ -8,14 +8,12 @@ using TMPro;
 public class Counter : MonoBehaviour
 {
     public TextMeshProUGUI CounterText;
-    public GameObject gam;
-    
     private GameManager gameManager;
     private Vector3 fireworksPlace = new Vector3(0.59f, 8.25f, 10.82f);
 
     public ParticleSystem fireworks;
 
-    private int Count = 0;
+    public int Count = 0;
     public bool isDunked = false;
 
     public GameObject ball;
@@ -54,7 +52,7 @@ public class Counter : MonoBehaviour
          CounterText.text = "Score : " + Count;
          isDunked = true;
          StartCoroutine(fireworksPlay());
-         gameManager.PointSound();
+         gameManager.PlaySound(1, 0.7f);
     }
 
     IEnumerator fireworksPlay () {
