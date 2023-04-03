@@ -1,4 +1,4 @@
- using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,12 +7,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-  //audio source and sounds
+    //audio source and sounds
 
-   public AudioSource src;
-   public AudioSource music;
-   public List<AudioClip> clips = new List<AudioClip>();
-  //Menus
+    public AudioSource src;
+    public AudioSource music;
+    public List<AudioClip> clips = new List<AudioClip>();
+    //Menus
     public Image pauseScreen;
     public GameObject gameMenu;
 
@@ -29,11 +29,11 @@ public class GameManager : MonoBehaviour
     private CanvasGroup mainMenuAlpha;
     private CanvasGroup restartScreenAlpha;
     private CanvasGroup gameScreenAlpha;
-    
+
     //
 
-    private Vector3 cameraGamePosition = new Vector3 (-5.78f, 6.52f, 28.66f);
-    private Vector3 cameraGameRotation = new Vector3 (0, 171.598f, 0f);
+    private Vector3 cameraGamePosition = new Vector3(-5.78f, 6.52f, 28.66f);
+    private Vector3 cameraGameRotation = new Vector3(0, 171.598f, 0f);
     private bool isPaused;
     public GameObject ball;
     public GameObject count;
@@ -48,13 +48,14 @@ public class GameManager : MonoBehaviour
 
     float timeElapsed;
     float lerpDuration = 1.5f;
-    float startValue=0;
-    float endValue=1;
+    float startValue = 0;
+    float endValue = 1;
 
     // Start is called before the first frame update
-    void Awake() {
+    void Awake()
+    {
 
-     getCanvas();
+        getCanvas();
 
     }
     void Start()
@@ -65,39 +66,45 @@ public class GameManager : MonoBehaviour
         spawnPointLocation = spawnPoint.gameObject.transform.position;
         StartCoroutine(loadMenus(mainMenuAlpha, 1.5f));
         restartScreen.gameObject.SetActive(false);
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (counterScript.isDunked == true && isSpawning == false && isGameActive) {
-          StartCoroutine(spawnBalls());
+        if (counterScript.isDunked == true && isSpawning == false && isGameActive)
+        {
+            StartCoroutine(spawnBalls());
         }
         pauseGame();
 
-        if (isGameActive == true) {
-            timeLimiter();
+        if (isGameActive == true)
+        {
+            timeLimiter(); 
         }
     }
-    
-    IEnumerator spawnBalls () {
+
+    IEnumerator spawnBalls()
+    {
         isSpawning = true;
-       Instantiate(ball, spawnPointLocation, ball.gameObject.transform.rotation);
-       yield return new WaitForSeconds(1);
-       counterScript.isDunked = false;
-       isSpawning = false;
+        Instantiate(ball, spawnPointLocation, ball.gameObject.transform.rotation);
+        yield return new WaitForSeconds(1);
+        counterScript.isDunked = false;
+        isSpawning = false;
     }
 
-    void pauseGame () {
-        if (Input.GetKeyDown(KeyCode.P) && isPaused == false && isGameActive) {
+    void pauseGame()
+    {
+        if (Input.GetKeyDown(KeyCode.P) && isPaused == false && isGameActive)
+        {
             Time.timeScale = 0;
             isPaused = true;
             pauseScreen.gameObject.SetActive(true);
             music.Pause();
         }
 
-        else if (Input.GetKeyDown(KeyCode.P) && isPaused == true && isGameActive) {
+        else if (Input.GetKeyDown(KeyCode.P) && isPaused == true && isGameActive)
+        {
             isPaused = false;
             Time.timeScale = 1;
             pauseScreen.gameObject.SetActive(false);
@@ -105,84 +112,94 @@ public class GameManager : MonoBehaviour
         }
     }
 
-     public void StartGame () {
-     gameMenu.gameObject.SetActive(false);
-     StartCoroutine(cameraToGamePosition(Quaternion.Euler(cameraGameRotation), 10f));
-     isGameActive = true;
-     gameScreen.gameObject.SetActive(true);
-      
-    }
-
-    private void timeLimiter () {
-      timeLimit -= Time.deltaTime;
-      timeCounter.text = "Time Left : " + timeLimit.ToString("0") + " sec";
-
-      if (timeLimit < 0) {
-        isGameActive = false;
-        restartScreen.gameObject.SetActive(true);
-        StartCoroutine(loadMenus(restartScreenAlpha, 5f));
-      }
+    public void StartGame()
+    {
+        gameMenu.gameObject.SetActive(false);
+        StartCoroutine(cameraToGamePosition(Quaternion.Euler(cameraGameRotation), 10f));
+        isGameActive = true;
+        gameScreen.gameObject.SetActive(true);
 
     }
-    
-    public void RestartGame() {
-      SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+    private void timeLimiter()
+    {
+        timeLimit -= Time.deltaTime;
+        timeCounter.text = "Time Left : " + timeLimit.ToString("0") + " sec";
+
+        if (timeLimit < 0)
+        {
+            isGameActive = false;
+            restartScreen.gameObject.SetActive(true);
+            StartCoroutine(loadMenus(restartScreenAlpha, 5f));
+        }
+
     }
-    
-    
-    void getCanvas () {
-      mainMenuAlpha = GameObject.Find("MenuScreen").GetComponent<CanvasGroup>();
-      restartScreenAlpha = GameObject.Find("RestartScreen").GetComponent<CanvasGroup>();
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
+    void getCanvas()
+    {
+        mainMenuAlpha = GameObject.Find("MenuScreen").GetComponent<CanvasGroup>();
+        restartScreenAlpha = GameObject.Find("RestartScreen").GetComponent<CanvasGroup>();
     }
 
     //sounds sources 
 
-    public void MainMenuButton() {
-      src.clip = clips[0];
-      src.Play();
+    public void MainMenuButton()
+    {
+        src.clip = clips[0];
+        src.Play();
     }
 
-    public void PointSound() {
-      src.clip = clips[1];
-      src.Play();
+    public void PointSound()
+    {
+        src.clip = clips[1];
+        src.Play();
     }
 
-    public void BallRelease() {
-      src.clip = clips[2];
-      src.volume = 0.5f;
-      src.Play();
+    public void BallRelease()
+    {
+        src.clip = clips[2];
+        src.volume = 0.5f;
+        src.Play();
     }
 
-    public void BallTightening() {
-      src.clip = clips[3];
-      src.Play();
+    public void BallTightening()
+    {
+        src.clip = clips[3];
+        src.Play();
     }
-    
+
     //animation Lerping
-    IEnumerator cameraToGamePosition (Quaternion endValue, float duration) 
+    IEnumerator cameraToGamePosition(Quaternion endValue, float duration)
     {
-       float y = 0;
-       Quaternion startValue = mainCamera.transform.rotation;
+        float y = 0;
+        Quaternion startValue = mainCamera.transform.rotation;
         while (y < duration)
-    {
-      mainCamera.transform.rotation = Quaternion.Lerp(startValue, endValue, y / 1.18f);
-      mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraGamePosition, y / 27);
-      
-      y += Time.deltaTime;
-      yield return null;
-    } 
-      mainCamera.transform.position = cameraGamePosition;
-      mainCamera.transform.rotation = endValue;
+        {
+            mainCamera.transform.rotation = Quaternion.Lerp(startValue, endValue, y / 0.75f);
+            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraGamePosition, y / 27);
+
+            y += Time.deltaTime;
+            yield return null;
+        }
+        mainCamera.transform.position = cameraGamePosition;
+        mainCamera.transform.rotation = endValue;
     }
 
-    IEnumerator loadMenus(CanvasGroup toLoad, float duration) {
-      float x = 0f;
-      while (x < duration)
+    IEnumerator loadMenus(CanvasGroup toLoad, float duration)
     {
-      toLoad.alpha = Mathf.Lerp(startValue, endValue, x / duration);
-      x += Time.deltaTime;
-      yield return null;
-    } 
-      toLoad.alpha = endValue;
+        float x = 0f;
+        while (x < duration)
+        {
+            toLoad.alpha = Mathf.Lerp(startValue, endValue, x / duration);
+            x += Time.deltaTime;
+            yield return null;
+        }
+        toLoad.alpha = endValue;
     }
 }

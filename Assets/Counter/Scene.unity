@@ -789,7 +789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CounterText: {fileID: 598753588}
   gam: {fileID: 1648811350}
-  fireworks: {fileID: 7303472089845130122, guid: 10b72606a370a894a88ba7cf2b64219f, type: 3}
+  fireworks: {fileID: 1625718692591340239, guid: 360bb5e9ec5f1a0438c4e37deba210ae, type: 3}
   isDunked: 0
   ball: {fileID: 7420869096470350035, guid: 5074842721857164c8cccf57a13bc2fe, type: 3}
 --- !u!65 &434641899
@@ -1675,7 +1675,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1084806443}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -21.561737, y: 10.270119, z: -9.314008}
+  m_LocalPosition: {x: -48.6, y: 10.270119, z: -9.314008}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 0
   m_Children:
