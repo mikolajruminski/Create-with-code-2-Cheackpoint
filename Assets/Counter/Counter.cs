@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Counter : MonoBehaviour
 {
-    public Text CounterText;
+    public TextMeshProUGUI CounterText;
     public GameObject gam;
     
     private GameManager gameManager;
