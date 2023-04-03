@@ -12,8 +12,13 @@ public class ThrowBalls : MonoBehaviour
     private Vector3 firstPos;
     private Vector3 secondPos;
 
+    public GameObject pivot;
+    public GameObject target;
+
     private Vector3 maxThrowVec = new Vector3(12f, 6f, 2f);
     private Vector3 throwVec;
+
+    public Vector3 currentMouse;
     private Rigidbody rb;
    private RaycastHit hit;
    public GameObject trail;
@@ -23,17 +28,25 @@ public class ThrowBalls : MonoBehaviour
 
     Camera cam;
 
-    private void Start() {
+     void Start() {
         cam = Camera.main;
         rb = GetComponent<Rigidbody>();
         isActive = true;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        target = GameObject.Find("target");
     }
     
-    private void Update()
+     void Update()
     {
+        Vector3 targetPosition = target.transform.position;
+        ifGroundedCorrection();
+        currentMouse = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
+        target.transform.position = currentMouse - transform.position;
+        pivot.gameObject.transform.LookAt(targetPosition);
+
         if (Input.GetMouseButtonDown(0) && isGrounded && gameManager.isGameActive){
             firstPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 23f));
+            pivot.gameObject.SetActive(true);
             gameManager.BallTightening();
             
             // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//
@@ -50,6 +63,7 @@ public class ThrowBalls : MonoBehaviour
                gameManager.BallRelease();
                rb.AddForce(throwVec * 1f, ForceMode.Impulse);
                gameObject.GetComponent<TrailRenderer>().emitting = true;
+               pivot.gameObject.SetActive(false);
             }
             isGrounded = false;
         }
@@ -57,9 +71,8 @@ public class ThrowBalls : MonoBehaviour
             StartCoroutine(restartPosition());
         }
         restartPosition();
-        ifGroundedCorrection();
     }
-    private void OnTriggerEnter(Collider other)
+     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Sensor")) {
             isActive = false;
@@ -67,7 +80,7 @@ public class ThrowBalls : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    private void OnCollisionEnter(Collision other)
+     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground")){
             Debug.Log("Touching ground!");
@@ -76,7 +89,7 @@ public class ThrowBalls : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit(Collision other)
+     void OnCollisionExit(Collision other)
     {
         if (other.gameObject.CompareTag("Ground")){
             Debug.Log("Not Touching ground!");
@@ -93,13 +106,12 @@ public class ThrowBalls : MonoBehaviour
     }
 
     void ifGroundedCorrection () {
-        var colliders = Physics.OverlapSphere(transform.position, 0.2f);
+        var colliders = Physics.OverlapSphere(transform.position, 0.3f);
            foreach(var collider in colliders) {
        if (collider.gameObject.name == "boisko") {
          isGrounded = true;
        }
- }
-
+     }
     }
 
 }

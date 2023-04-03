@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
   //audio source and sounds
 
    public AudioSource src;
+   public AudioSource music;
    public List<AudioClip> clips = new List<AudioClip>();
   //Menus
     public Image pauseScreen;
@@ -21,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject restartScreen;
 
+    private GameObject mainCamera;
+
     //canvas for menus alpha
 
     private CanvasGroup mainMenuAlpha;
@@ -28,6 +31,9 @@ public class GameManager : MonoBehaviour
     private CanvasGroup gameScreenAlpha;
     
     //
+
+    private Vector3 cameraGamePosition = new Vector3 (-5.78f, 6.52f, 28.66f);
+    private Vector3 cameraGameRotation = new Vector3 (0, 171.598f, 0f);
     private bool isPaused;
     public GameObject ball;
     public GameObject count;
@@ -36,7 +42,7 @@ public class GameManager : MonoBehaviour
     public Vector3 spawnPointLocation;
     public bool isGameActive = false;
     bool isSpawning = false;
-    private float timeLimit = 60;
+    private float timeLimit = 5;
 
     //Lerp values
 
@@ -54,9 +60,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         counterScript = count.GetComponent<Counter>();
+        mainCamera = GameObject.Find("Main Camera");
         isPaused = false;
         spawnPointLocation = spawnPoint.gameObject.transform.position;
-        StartCoroutine(loadMenu());
+        StartCoroutine(loadMenus(mainMenuAlpha, 1.5f));
         restartScreen.gameObject.SetActive(false);
         
     }
@@ -73,7 +80,7 @@ public class GameManager : MonoBehaviour
             timeLimiter();
         }
     }
-
+    
     IEnumerator spawnBalls () {
         isSpawning = true;
        Instantiate(ball, spawnPointLocation, ball.gameObject.transform.rotation);
@@ -87,19 +94,23 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
             isPaused = true;
             pauseScreen.gameObject.SetActive(true);
+            music.Pause();
         }
 
         else if (Input.GetKeyDown(KeyCode.P) && isPaused == true && isGameActive) {
             isPaused = false;
             Time.timeScale = 1;
             pauseScreen.gameObject.SetActive(false);
+            music.UnPause();
         }
     }
 
      public void StartGame () {
      gameMenu.gameObject.SetActive(false);
+     StartCoroutine(cameraToGamePosition(Quaternion.Euler(cameraGameRotation), 10f));
      isGameActive = true;
      gameScreen.gameObject.SetActive(true);
+      
     }
 
     private void timeLimiter () {
@@ -109,36 +120,15 @@ public class GameManager : MonoBehaviour
       if (timeLimit < 0) {
         isGameActive = false;
         restartScreen.gameObject.SetActive(true);
-        StartCoroutine(loadRestart());
+        StartCoroutine(loadMenus(restartScreenAlpha, 5f));
       }
 
     }
     
-    //Lerping menus into existence 
     public void RestartGame() {
       SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-    IEnumerator loadMenu () {
-      while (timeElapsed < lerpDuration)
-    {
-      mainMenuAlpha.alpha = Mathf.Lerp(startValue, endValue, timeElapsed / lerpDuration);
-      timeElapsed += Time.deltaTime;
-      yield return null;
-    } 
-      mainMenuAlpha.alpha = endValue;
-    }
     
-    IEnumerator loadRestart () {
-      float x = 0f;
-      while (x < 5)
-    {
-      restartScreenAlpha.alpha = Mathf.Lerp(startValue, endValue, x / lerpDuration);
-      x += Time.deltaTime;
-      yield return null;
-    } 
-      restartScreenAlpha.alpha = endValue;
-    }
     
     void getCanvas () {
       mainMenuAlpha = GameObject.Find("MenuScreen").GetComponent<CanvasGroup>();
@@ -166,5 +156,33 @@ public class GameManager : MonoBehaviour
     public void BallTightening() {
       src.clip = clips[3];
       src.Play();
+    }
+    
+    //animation Lerping
+    IEnumerator cameraToGamePosition (Quaternion endValue, float duration) 
+    {
+       float y = 0;
+       Quaternion startValue = mainCamera.transform.rotation;
+        while (y < duration)
+    {
+      mainCamera.transform.rotation = Quaternion.Lerp(startValue, endValue, y / 1.18f);
+      mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraGamePosition, y / 27);
+      
+      y += Time.deltaTime;
+      yield return null;
+    } 
+      mainCamera.transform.position = cameraGamePosition;
+      mainCamera.transform.rotation = endValue;
+    }
+
+    IEnumerator loadMenus(CanvasGroup toLoad, float duration) {
+      float x = 0f;
+      while (x < duration)
+    {
+      toLoad.alpha = Mathf.Lerp(startValue, endValue, x / duration);
+      x += Time.deltaTime;
+      yield return null;
+    } 
+      toLoad.alpha = endValue;
     }
 }
