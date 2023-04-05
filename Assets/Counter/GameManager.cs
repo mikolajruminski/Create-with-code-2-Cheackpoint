@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +21,9 @@ public class GameManager : MonoBehaviour
     public GameObject gameScreen;
 
     public TextMeshProUGUI timeCounter;
+    public TextMeshProUGUI highScore;
+    public TMP_InputField yourName;
+
 
     public GameObject restartScreen;
 
@@ -43,6 +48,7 @@ public class GameManager : MonoBehaviour
     public bool isGameActive = false;
     bool isSpawning = false;
     private float timeLimit = 60;
+    private string input;
 
     //Lerp values
 
@@ -55,6 +61,8 @@ public class GameManager : MonoBehaviour
     {
 
         getCanvas();
+        loadData();
+        yourName.text = input;
 
     }
     void Start()
@@ -65,6 +73,7 @@ public class GameManager : MonoBehaviour
         spawnPointLocation = spawnPoint.gameObject.transform.position;
         StartCoroutine(loadMenus(mainMenuAlpha, 1.5f));
         restartScreen.gameObject.SetActive(false);
+
 
     }
 
@@ -79,7 +88,7 @@ public class GameManager : MonoBehaviour
 
         if (isGameActive == true)
         {
-            timeLimiter(); 
+            timeLimiter();
         }
     }
     //spawning new balls
@@ -91,7 +100,7 @@ public class GameManager : MonoBehaviour
         counterScript.isDunked = false;
         isSpawning = false;
     }
-    
+
     //game functions, start/pause/restart
     void pauseGame()
     {
@@ -203,6 +212,48 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         toLoad.alpha = differentStartValue;
+    }
+
+    //get input from the player 
+    public void ReadStringInput(string s)
+    {
+        input = s;
+    }
+
+    //save name and high score between sessions
+
+    [System.Serializable]
+    public class PlayerData
+    {
+        public string name;
+        public int highScore;
+    }
+
+    public void saveData()
+    {
+        PlayerData data = new PlayerData();
+        data.name = input;
+
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void loadData()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            PlayerData data = JsonUtility.FromJson<PlayerData>(json);
+
+            input = data.name;
+        }
+
+    }
+
+    private void OnApplicationQuit()
+    {
+        saveData();
     }
 
 }
