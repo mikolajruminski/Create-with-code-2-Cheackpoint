@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         gameMenu.gameObject.SetActive(false);
-        StartCoroutine(cameraToGamePosition(Quaternion.Euler(cameraGameRotation), 1f));
+        StartCoroutine(cameraToGamePosition(Quaternion.Euler(cameraGameRotation), 2f));
     }
 
     private void timeLimiter()
@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
         Quaternion startValue = mainCamera.transform.rotation;
         while (y < duration)
         {
-            mainCamera.transform.rotation = Quaternion.Lerp(startValue, endValue, y / 0.75f);
+            mainCamera.transform.rotation = Quaternion.Lerp(startValue, endValue, y / 0.66f);
             mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraGamePosition, y / 27);
             y += Time.deltaTime;
             yield return null;
